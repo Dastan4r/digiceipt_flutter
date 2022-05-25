@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "617913004984",
+    "project_id": "mydigiceipts-android-ios",
+    "storage_bucket": "mydigiceipts-android-ios.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617913004984:android:bf1a9d4a0b2da03599d54d",
+        "android_client_info": {
+          "package_name": "com.digiceiptsglobal.mydigiceipts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617913004984-25n16afrlfpcerol0o0iapc2m8qaluir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digiceiptsglobal.mydigiceipts",
+            "certificate_hash": "1354fdb3e2ba24185c65b04a4a1cd177c7cac05d"
+          }
+        },
+        {
+          "client_id": "617913004984-ligfugd7u4inuk8s3s9t9lsn4ca7jkps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq2VlqgagDVjFQdyy_z7uxQv3V1HoYU4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617913004984-ligfugd7u4inuk8s3s9t9lsn4ca7jkps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617913004984-5sbplm3fgkvsre283g1haqcad43u2kul.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.digiceiptsglobal.mydigiceipts"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617913004984:android:7e7a496ecbe7568a99d54d",
+        "android_client_info": {
+          "package_name": "com.example.mydigiceipts_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617913004984-ligfugd7u4inuk8s3s9t9lsn4ca7jkps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq2VlqgagDVjFQdyy_z7uxQv3V1HoYU4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617913004984-ligfugd7u4inuk8s3s9t9lsn4ca7jkps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617913004984-5sbplm3fgkvsre283g1haqcad43u2kul.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.digiceiptsglobal.mydigiceipts"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
