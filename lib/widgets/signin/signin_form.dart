@@ -39,37 +39,36 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void onSendForm (BuildContext ctx) async {
-    print(ctx.read<AuthenticationProvider?>());
-    // setState(() {
-    //   sendFormLoading = true;
-    // });
-    // if (_formKey.currentState!.validate()) {
-    //   _formKey.currentState?.save();
+    setState(() {
+      sendFormLoading = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
 
-    //   FocusManager.instance.primaryFocus?.unfocus();
+      FocusManager.instance.primaryFocus?.unfocus();
 
-    //   if(formData['email'] != null && formData['password'] != null) {
-    //     await Provider.of<AuthenticationProvider>(ctx, listen: false).login(formData['email'], formData['password']);
-    //   }
+      if(formData['email'] != null && formData['password'] != null) {
+        await Provider.of<AuthenticationProvider>(context, listen: false).login(formData['email'], formData['password']);
+      }
 
-    //   setState(() {
-    //     autoValidate = false;
-    //     sendFormLoading = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     autoValidate = true;
-    //     sendFormLoading = false;
-    //   });
-    // }
+      setState(() {
+        autoValidate = false;
+        sendFormLoading = false;
+      });
+    } else {
+      setState(() {
+        autoValidate = true;
+        sendFormLoading = false;
+      });
+    }
   }
 
   void navigateToSignUp(BuildContext ctx) {
-    Navigator.pushNamed(context, SignUpScreen.routeName);
+    Navigator.pushNamed(ctx, SignUpScreen.routeName);
   }
 
   void navigateToRecoverPassword(BuildContext ctx) {
-    Navigator.pushNamed(context, PasswordRecoverScreen.routeName);
+    Navigator.pushNamed(ctx, PasswordRecoverScreen.routeName);
   }
 
   @override

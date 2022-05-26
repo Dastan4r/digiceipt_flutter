@@ -17,48 +17,48 @@ class ReceiptItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset('assets/images/${item.category}-category-image.png'),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item.title,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    Text(
-                      '\$${item.price}',
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item.category,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                    Text(
-                      DateFormat('d MMM').format(item.time),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
+          // Image.asset('assets/images/${item.category}-category-image.png'),
+          // const SizedBox(width: 12),
+          // Expanded(
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             item.title,
+          //             style: Theme.of(context).textTheme.headline3,
+          //           ),
+          //           Text(
+          //             '\$${item.price}',
+          //             style: Theme.of(context).textTheme.headline3,
+          //           ),
+          //         ],
+          //       ),
+          //       const SizedBox(height: 3),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             item.category,
+          //             style: Theme.of(context)
+          //                 .textTheme
+          //                 .bodyText1
+          //                 ?.copyWith(color: Colors.grey),
+          //           ),
+          //           Text(
+          //             DateFormat('d MMM').format(item.time),
+          //             style: Theme.of(context)
+          //                 .textTheme
+          //                 .bodyText1
+          //                 ?.copyWith(color: Colors.grey),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );

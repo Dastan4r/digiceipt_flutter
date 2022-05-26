@@ -35,8 +35,8 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       elevation: widget.withElevation ? 1 : 0,
       systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-        statusBarBrightness: Brightness.dark, // For iOS (dark icons)
+        statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+        statusBarBrightness: Brightness.light, // For iOS (dark icons)
       ),
       title: Padding(
         padding: const EdgeInsets.only(left: 16.0),

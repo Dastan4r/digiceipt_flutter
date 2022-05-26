@@ -6,6 +6,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'firebase_options.dart';
 
 import './providers/authentication_provider.dart';
+import './providers/digiceipts_provider.dart';
 
 import 'screens/home/home_screen.dart';
 import 'screens/home/home_tabs.dart';
@@ -52,6 +53,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           value: AuthenticationProvider(),
         ),
+        ChangeNotifierProvider.value(
+          value: DigiceiptsProvider(),
+        ),
       ],
       child: Consumer<AuthenticationProvider>(
         builder: (ctx, auth, _) {
@@ -87,7 +91,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 )),
             home:
-                auth.isAuthenticated ? const HomeTabs() : const SignUpScreen(),
+                auth.isAuthenticated ? const HomeTabs() : const SignInScreen(),
             routes: {
               SignInScreen.routeName: (ctx) => const SignInScreen(),
               SignUpScreen.routeName: (ctx) => const SignUpScreen(),

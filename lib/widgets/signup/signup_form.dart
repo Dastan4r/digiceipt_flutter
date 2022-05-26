@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 import '../../widgets/app/app_button.dart';
-import '../../providers//authentication_provider.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({Key? key}) : super(key: key);
+  final Function(Map<String, String>) onSendForm;
+  const SignupForm({Key? key, required this.onSendForm}) : super(key: key);
 
   @override
   State<SignupForm> createState() => _SignupFormState();
@@ -47,31 +46,29 @@ class _SignupFormState extends State<SignupForm> {
 
   final Map<String, String> _formData = {};
 
-  void onSendForm(BuildContext ctx) async {
-    print(ctx.read<AuthenticationProvider?>());
-    // setState(() {
-    //   sendFormLoading = true;
-    // });
-    // if (_formKey.currentState!.validate()) {
-    //   _formKey.currentState?.save();
+  void onSendForm() async {
+    setState(() {
+      sendFormLoading = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
 
-    //   FocusManager.instance.primaryFocus?.unfocus();
+      FocusManager.instance.primaryFocus?.unfocus();
 
-    //   // if (_formData.isNotEmpty) {
-    //     print(ctx.read<AuthenticationProvider>());
-    //     // await ctx.read<AuthenticationProvider>().signup(_formData);
-    //   }
+      if (_formData.isNotEmpty) {
+        await widget.onSendForm(_formData);
+      }
 
-    //   setState(() {
-    //     autoValidate = false;
-    //     sendFormLoading = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     autoValidate = true;
-    //     sendFormLoading = false;
-    //   });
-    // }
+      setState(() {
+        autoValidate = false;
+        sendFormLoading = false;
+      });
+    } else {
+      setState(() {
+        autoValidate = true;
+        sendFormLoading = false;
+      });
+    }
   }
 
   void navigateToSignIn(BuildContext ctx) {
@@ -471,7 +468,7 @@ class _SignupFormState extends State<SignupForm> {
                     autocorrect: false,
                     cursorColor: const Color.fromRGBO(60, 60, 67, 1),
                     keyboardType: TextInputType.text,
-                    onFieldSubmitted: (_) => onSendForm(context),
+                    onFieldSubmitted: (_) => onSendForm(),
                     onSaved: (value) {
                       if (value != null && value.isNotEmpty) {
                         _formData['password'] = value;
@@ -542,7 +539,7 @@ class _SignupFormState extends State<SignupForm> {
                 ],
               ),
               const SizedBox(height: 30),
-              AppButton(title: "Create Account", onPress: () => onSendForm(context)),
+              AppButton(title: "Create Account", onPress: onSendForm, loading: sendFormLoading),
               const SizedBox(height: 30),
               Wrap(
                 alignment: WrapAlignment.center,
