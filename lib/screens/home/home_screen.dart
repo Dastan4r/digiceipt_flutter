@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+//import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/app/custom_app_bar.dart';
-import '../../widgets/home/home_button.dart';
-import '../../widgets/home/receipt_item.dart';
+//import '../../widgets/home/home_button.dart';
+//import '../../widgets/home/receipt_item.dart';
 import '../../models/receipt_item_model.dart';
-import '../../widgets/home/category_header.dart';
+//import '../../widgets/home/category_header.dart';
 import '../../screens/camera/camera_screen.dart';
+import '../../screens/digiceipt/digiceipt_screen.dart';
 
 import '../../providers/digiceipts_provider.dart';
 
@@ -195,6 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
         .getDigiceipts();
   }
 
+  void navigateToDigiceipt (BuildContext ctx, ReceiptModel item) {
+     Navigator.pushNamed(ctx, DigiceiptScreen.routeName, arguments: item);
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<ReceiptModel> digiceipts =
@@ -235,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () => navigateToDigiceipt(context, digiceipts[index]),
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),

@@ -10,7 +10,6 @@ import 'firebase_options.dart';
 
 import './providers/authentication_provider.dart';
 import './providers/digiceipts_provider.dart';
-import './helpers/shared_preference.dart';
 
 import 'screens/home/home_screen.dart';
 import 'screens/home/home_tabs.dart';
@@ -21,6 +20,7 @@ import 'screens/password_recovery/password_recovery_screen.dart';
 import 'screens/stores/stores_screen.dart';
 import 'screens/camera/camera_screen.dart';
 import 'screens/digiceipts_details/digiceipts_details_screen.dart';
+import 'screens/digiceipt/digiceipt_screen.dart';
 
 List<CameraDescription> cameras = [];
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -129,6 +129,7 @@ class _MyAppState extends State<MyApp> {
               CameraScreen.routeName: (ctx) => CameraScreen(cameras: cameras),
               DigiceiptsDetailScreen.routeName: (ctx) =>
                   const DigiceiptsDetailScreen(),
+              DigiceiptScreen.routeName: (ctx) => const DigiceiptScreen(),
             },
           );
         },

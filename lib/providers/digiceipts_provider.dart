@@ -41,7 +41,7 @@ class DigiceiptsProvider with ChangeNotifier {
         uncodedDigiceipts.add(ReceiptModel.fromJson(element as Map<String, dynamic>));
       }
 
-      uncodedDigiceipts.removeWhere((element) => element.thumbnails.download_url == null);
+      uncodedDigiceipts.removeWhere((element) => element.thumbnails.download_url == null || element.receipt.download_url == null);
 
       _digiceipts = uncodedDigiceipts;
 

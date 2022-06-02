@@ -7,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/digiceipts_provider.dart';
-import '../../models/upload_receipt_model.dart';
-import '../../screens/home/home_tabs.dart';
+// import '../../models/upload_receipt_model.dart';
+// import '../../screens/home/home_tabs.dart';
 
 class DigiceiptsDetailScreen extends StatefulWidget {
   static const String routeName = '/digiceipts-details';
