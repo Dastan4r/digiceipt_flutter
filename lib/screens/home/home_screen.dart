@@ -223,53 +223,59 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Flexible(
-                    child: RefreshIndicator(
-                      onRefresh: _onRefresh,
-                      child: GridView.builder(
-                        controller: _scrollController,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisExtent: 162,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () =>
-                                navigateToDigiceipt(context, digiceipts[index]),
-                            child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              child: Image.network(
-                                digiceipts[index]
-                                    .thumbnails
-                                    .download_url
-                                    .toString(),
-                                fit: BoxFit.cover,
-                                loadingBuilder: (ctx, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
+          : digiceipts.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: RefreshIndicator(
+                          onRefresh: _onRefresh,
+                          child: GridView.builder(
+                            controller: _scrollController,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisExtent: 162,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
                             ),
-                          );
-                        },
-                        itemCount: digiceipts.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () => navigateToDigiceipt(
+                                    context, digiceipts[index]),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5)),
+                                  child: Image.network(
+                                    digiceipts[index]
+                                        .thumbnails
+                                        .download_url
+                                        .toString(),
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (ctx, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: digiceipts.length,
+                          ),
+                        ),
                       ),
-                    ),
+                      if (loadingMore) const CircularProgressIndicator()
+                    ],
                   ),
-                  if (loadingMore) const CircularProgressIndicator()
-                ],
-              ),
-            ),
+                )
+              : Center(
+                  child: Text('You dont have any digiceipts',
+                      style: Theme.of(context).textTheme.headline3),
+                ),
     );
   }
 }
