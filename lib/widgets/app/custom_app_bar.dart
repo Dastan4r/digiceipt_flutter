@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/authentication_provider.dart';
 
 class CustomAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -35,11 +38,11 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       elevation: widget.withElevation ? 1 : 0,
       systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+        statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
         statusBarBrightness: Brightness.light, // For iOS (dark icons)
       ),
       title: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+        padding: const EdgeInsets.only(left: 10.0),
         child: Text(
           widget.title,
           style: Theme.of(context).textTheme.headline1,
@@ -61,15 +64,17 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
             ),
           ),
         ),
-        SizedBox(
-          width: 40,
-          height: 40,
-          child: TextButton(
-            style: style,
-            onPressed: () {},
-            child: SvgPicture.asset(
-              userProfileIcon,
-              semanticsLabel: 'Profile',
+        Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: TextButton(
+              style: style,
+              onPressed: () {
+                Provider.of<AuthenticationProvider>(context, listen: false).logout();
+              } ,
+              child: const Icon(Icons.logout_outlined, color: Colors.black,)
             ),
           ),
         ),

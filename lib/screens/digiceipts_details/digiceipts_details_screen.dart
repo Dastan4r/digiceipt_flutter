@@ -1,11 +1,14 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:io' as Io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mydigiceipts_flutter/screens/home/home_tabs.dart';
+import 'package:provider/provider.dart';
 
-import '../../widgets/app/app_button.dart';
+import '../../providers/digiceipts_provider.dart';
+import '../../models/upload_receipt_model.dart';
+import '../../screens/home/home_tabs.dart';
 
 class DigiceiptsDetailScreen extends StatefulWidget {
   static const String routeName = '/digiceipts-details';
@@ -19,20 +22,21 @@ class DigiceiptsDetailScreen extends StatefulWidget {
 class _DigiceiptsDetailScreenState extends State<DigiceiptsDetailScreen> {
   final String closeCameraIcon = 'assets/icons/close-camera-icon.svg';
 
-  List<File> _capturedImages = [];
+  List<Io.File> _capturedImages = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       setState(() {
         _capturedImages =
-            ModalRoute.of(context)!.settings.arguments as List<File>;
+            ModalRoute.of(context)!.settings.arguments as List<Io.File>;
       });
     });
     super.initState();
   }
 
-  void deleteCameraReceipt(File image) {
+  void deleteCameraReceipt(Io.File image) {
     setState(() {
       _capturedImages =
           _capturedImages.where((element) => element != image).toList();
@@ -43,8 +47,34 @@ class _DigiceiptsDetailScreenState extends State<DigiceiptsDetailScreen> {
     Navigator.of(context).pop(_capturedImages);
   }
 
-  void navigateToMainPage(BuildContext ctx) {
-    Navigator.of(context).pushReplacementNamed(HomeTabs.routeName);
+  void saveDigiceipts(BuildContext ctx) async {
+    List<Map<String, String>> data = [];
+
+    if(_capturedImages.isNotEmpty) {
+      for (var element in _capturedImages) { 
+        final bytes = Io.File(element.path).readAsBytesSync();
+
+        String img64 = base64Encode(bytes);
+
+        data.add({
+          'receipt': 'data:image/jpg;base64,$img64',
+          'title': '',
+        });
+      }
+    }
+
+    if(data.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+      await Provider.of<DigiceiptsProvider>(ctx, listen: false).uploadDigiceipts(data).then((_) {
+        setState(() {
+          // isLoading = false;
+
+          // Navigator.pushReplacementNamed(context, HomeTabs.routeName);
+        });
+      });
+    }
   }
 
   @override
@@ -89,8 +119,8 @@ class _DigiceiptsDetailScreenState extends State<DigiceiptsDetailScreen> {
             width: 50,
             height: 50,
             child: TextButton(
-              onPressed: () => navigateToMainPage(context),
-              child: const Text("Save"),
+              onPressed: () => saveDigiceipts(context),
+              child:  isLoading ? const CircularProgressIndicator() :  const Text("Save"),
             ),
           ),
         ],

@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_config/flutter_config.dart';
-import 'package:localstorage/localstorage.dart';
 
-final LocalStorage storage = LocalStorage('mydigiceipts');
-final String baseURL = FlutterConfig.get('URL');
-final String registerToken = FlutterConfig.get('REGISTER_TOKEN');
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../helpers/shared_preference.dart';
+
+final String? baseURL = dotenv.env['URL'];
+final String? registerToken = dotenv.env['REGISTER_TOKEN'];
 
 class AuthenticationProvider with ChangeNotifier {
   bool _isAuthenticated = false;
@@ -32,24 +33,30 @@ class AuthenticationProvider with ChangeNotifier {
 
         _token = await result.user?.getIdToken();
 
-        storage.setItem('token', _token);
+        if (_token != null && baseURL != null) {
+          await SharedPreferenceController()
+              .setString('token', _token.toString());
 
-        final Uri url = Uri.parse('$baseURL/users/me');
+          final Uri url = Uri.parse('$baseURL/users/me');
 
-        Map<String, String> requestHeaders = {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $_token'
-        };
-  
-        final userResult = await http.get(url, headers: requestHeaders);
+          Map<String, String> requestHeaders = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $_token'
+          };
 
-        final user = json.decode(userResult.body);
+          final userResult = await http.get(url, headers: requestHeaders);
 
-        _currentUser = user['data'];
+          final user = json.decode(userResult.body);
 
-        if (_currentUser != null && _token != null) {
-          _isAuthenticated = true;
+          _currentUser = user['data'];
+
+          if (_currentUser != null && _token != null) {
+            _isAuthenticated = true;
+          }
+        } else {
+          print('dfsd');
+          _isAuthenticated = false;
         }
       }
     } catch (error) {
@@ -60,29 +67,31 @@ class AuthenticationProvider with ChangeNotifier {
 
   Future<void> signup(Map<String, String> signupData) async {
     try {
-      final Uri url = Uri.parse('$baseURL/users');
+      if (baseURL != null && registerToken != null) {
+        final Uri url = Uri.parse('$baseURL/users');
 
-      Map<String, String> requestHeaders = {
-       'Content-type': 'application/json',
-       'Accept': 'application/json',
-       'Authorization': 'Bearer $registerToken'
-      };
+        Map<String, String> requestHeaders = {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $registerToken'
+        };
 
-      final result = await http.post(
-        url,
-        body: json.encode(signupData),
-        headers: requestHeaders,
-      );
+        final result = await http.post(
+          url,
+          body: json.encode(signupData),
+          headers: requestHeaders,
+        );
 
-      final decodedResult = json.decode(result.body);
+        final decodedResult = json.decode(result.body);
 
-      if(decodedResult['uri'] != null) {
-        await login(signupData['login'], signupData['password']);
+        if (decodedResult['uri'] != null) {
+          await login(signupData['login'], signupData['password']);
+        }
       }
-
     } catch (error) {
       print(error);
     }
+
     notifyListeners();
   }
 
@@ -93,6 +102,8 @@ class AuthenticationProvider with ChangeNotifier {
       _currentUser = null;
       _token = null;
       _isAuthenticated = false;
+
+      SharedPreferenceController().clearAll();
     } catch (error) {
       print(error);
     }

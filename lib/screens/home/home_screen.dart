@@ -21,10 +21,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String _recentlyAddedIcon = 'assets/icons/recently-added-icon.svg';
-  final String _filterIcon = 'assets/icons/filter-icon.svg';
+  final ScrollController _scrollController = ScrollController();
+  // final String _recentlyAddedIcon = 'assets/icons/recently-added-icon.svg';
+  // final String _filterIcon = 'assets/icons/filter-icon.svg';
 
   bool isLoading = false;
+  bool loadingMore = false;
 
   // final Map<String, List<ReceiptModel>> _items = {
   //   "2022": [
@@ -125,21 +127,21 @@ class _HomeScreenState extends State<HomeScreen> {
   //   ],
   // };
 
-  bool _isElevationAppBar = false;
+  // bool _isElevationAppBar = false;
 
-  bool _onScroll(scrollValue) {
-    if (scrollValue.metrics.pixels >= 40) {
-      setState(() {
-        _isElevationAppBar = true;
-      });
-    } else {
-      setState(() {
-        _isElevationAppBar = false;
-      });
-    }
+  // bool _onScroll(scrollValue) {
+  //   if (scrollValue.metrics.pixels >= 40) {
+  //     setState(() {
+  //       _isElevationAppBar = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _isElevationAppBar = false;
+  //     });
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
   @override
   void initState() {
@@ -155,11 +157,42 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
     });
+
+    _scrollController.addListener(_scrollListener);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if ((_scrollController.position.pixels >
+            (_scrollController.position.maxScrollExtent * 0.75)) &&
+        !loadingMore) {
+      setState(() {
+        loadingMore = true;
+      });
+      Provider.of<DigiceiptsProvider>(context, listen: false)
+          .getDigiceiptsMore()
+          .then((_) {
+        setState(() {
+          loadingMore = false;
+        });
+      });
+    }
   }
 
   void navigateToCameraScreen(BuildContext ctx) {
     Navigator.pushReplacementNamed(ctx, CameraScreen.routeName);
+  }
+
+  Future<void> _onRefresh() async {
+    await Provider.of<DigiceiptsProvider>(context, listen: false)
+        .getDigiceipts();
   }
 
   @override
@@ -170,9 +203,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBarWidget(
+      appBar: const CustomAppBarWidget(
         title: 'Home',
-        withElevation: _isElevationAppBar,
+        // withElevation: _isElevationAppBar,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => navigateToCameraScreen(context),
@@ -186,34 +219,50 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CircularProgressIndicator(),
             )
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisExtent: 162,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {},
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                      child: Image.network(
-                        digiceipts[index].thumbnails.download_url.toString(),
-                        fit: BoxFit.cover,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: RefreshIndicator(
+                      onRefresh: _onRefresh,
+                      child: GridView.builder(
+                        controller: _scrollController,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisExtent: 162,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {},
+                            child: ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
+                              child: Image.network(
+                                digiceipts[index].thumbnails.download_url.toString(),
+                                fit: BoxFit.cover,
+                                loadingBuilder: (ctx, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: digiceipts.length,
                       ),
                     ),
-                  );
-                },
-                itemCount: digiceipts.length,
+                  ),
+                  if(loadingMore) const CircularProgressIndicator()
+                ],
               ),
             ),
     );
   }
 }
-
-
 
 // Padding(
 //         padding: const EdgeInsets.symmetric(horizontal: 16),
