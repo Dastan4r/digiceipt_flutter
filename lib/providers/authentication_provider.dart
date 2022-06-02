@@ -28,15 +28,15 @@ class AuthenticationProvider with ChangeNotifier {
   Future<void> login(String? email, String? password) async {
     try {
       if (email != null && password != null) {
-        final result = await FirebaseAuth.instance
+        final UserCredential result = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
-        _token = await result.user?.getIdToken();
+        String _token = await result.user!.getIdToken(true);
 
-        if (_token != null && baseURL != null) {
-          await SharedPreferenceController()
+        await SharedPreferenceController()
               .setString('token', _token.toString());
 
+        if (baseURL != null) {
           final Uri url = Uri.parse('$baseURL/users/me');
 
           Map<String, String> requestHeaders = {
@@ -83,6 +83,8 @@ class AuthenticationProvider with ChangeNotifier {
         );
 
         final decodedResult = json.decode(result.body);
+
+        print(decodedResult);
 
         if (decodedResult['uri'] != null) {
           await login(signupData['login'], signupData['password']);

@@ -23,35 +23,38 @@ class DigiceiptsProvider with ChangeNotifier {
     try {
       final url = Uri.parse('$baseURL/receipts?view=gallery&page=1&limit=15');
 
-      final _token = await SharedPreferenceController().getString('token');
+      String? _token = await SharedPreferenceController().getString('token');
 
-      Map<String, String> requestHeaders = {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $_token'
-      };
+      if(_token != null) {
+              Map<String, String> requestHeaders = {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token'
+        };
 
-      final response = await http.get(url, headers: requestHeaders);
+        final response = await http.get(url, headers: requestHeaders);
 
-      final decodedResponse = json.decode(response.body);
+        final decodedResponse = json.decode(response.body);
 
-      List<ReceiptModel> uncodedDigiceipts = [];
+        List<ReceiptModel> uncodedDigiceipts = [];
 
-      for (var element in decodedResponse['data']) {
-        uncodedDigiceipts.add(ReceiptModel.fromJson(element as Map<String, dynamic>));
+        for (var element in decodedResponse['data']) {
+          uncodedDigiceipts.add(ReceiptModel.fromJson(element as Map<String, dynamic>));
+        }
+
+        uncodedDigiceipts.removeWhere((element) => element.thumbnails.download_url == null || element.receipt.download_url == null);
+
+        _digiceipts = uncodedDigiceipts;
+
+        if(decodedResponse['next_url'] != null) {
+          nextUrl = decodedResponse['next_url'];
+          lastPage = false;
+        } else {
+          nextUrl = null;
+          lastPage = true;
+        }
       }
 
-      uncodedDigiceipts.removeWhere((element) => element.thumbnails.download_url == null || element.receipt.download_url == null);
-
-      _digiceipts = uncodedDigiceipts;
-
-      if(decodedResponse['next_url'] != null) {
-        nextUrl = decodedResponse['next_url'];
-        lastPage = false;
-      } else {
-        nextUrl = null;
-        lastPage = true;
-      }
     } catch (err) {
       print(err);
     }
