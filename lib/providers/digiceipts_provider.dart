@@ -114,16 +114,13 @@ class DigiceiptsProvider with ChangeNotifier {
       };
 
       Map params = {
-        'camera': null,
-        'data': data,
+        'camera': {
+          "camera_details": null
+        },
+        'data': data
       };
 
-      final response = await http.post(url, headers: requestHeaders, body: json.encode(params));
-
-      final decodedResponse = json.decode(response.body);
-
-      print(decodedResponse);
-
+      await http.post(url, headers: requestHeaders, body: json.encode(params));
     } catch(err) {
       print(err);
     }

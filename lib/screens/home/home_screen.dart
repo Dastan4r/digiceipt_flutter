@@ -196,8 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .getDigiceipts();
   }
 
-  void navigateToDigiceipt (BuildContext ctx, ReceiptModel item) {
-     Navigator.pushNamed(ctx, DigiceiptScreen.routeName, arguments: item);
+  void navigateToDigiceipt(BuildContext ctx, ReceiptModel item) {
+    Navigator.pushNamed(ctx, DigiceiptScreen.routeName, arguments: item);
   }
 
   @override
@@ -232,7 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onRefresh: _onRefresh,
                       child: GridView.builder(
                         controller: _scrollController,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           mainAxisExtent: 162,
                           crossAxisSpacing: 10,
@@ -240,12 +241,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () => navigateToDigiceipt(context, digiceipts[index]),
+                            onTap: () =>
+                                navigateToDigiceipt(context, digiceipts[index]),
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
                               child: Image.network(
-                                digiceipts[index].thumbnails.download_url.toString(),
+                                digiceipts[index]
+                                    .thumbnails
+                                    .download_url
+                                    .toString(),
                                 fit: BoxFit.cover,
                                 loadingBuilder: (ctx, child, loadingProgress) {
                                   if (loadingProgress == null) return child;
@@ -261,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  if(loadingMore) const CircularProgressIndicator()
+                  if (loadingMore) const CircularProgressIndicator()
                 ],
               ),
             ),

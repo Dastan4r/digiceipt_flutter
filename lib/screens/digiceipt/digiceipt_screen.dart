@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/app/custom_app_bar.dart';
-
 import '../../models/receipt_item_model.dart';
 
 class DigiceiptScreen extends StatefulWidget {
@@ -29,6 +27,7 @@ class _DigiceiptScreenState extends State<DigiceiptScreen> {
           'Digiceipt',
           style: Theme.of(context).textTheme.headline1,
         ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

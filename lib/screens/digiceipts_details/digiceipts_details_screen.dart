@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/digiceipts_provider.dart';
 // import '../../models/upload_receipt_model.dart';
-// import '../../screens/home/home_tabs.dart';
+import '../../screens/home/home_tabs.dart';
 
 class DigiceiptsDetailScreen extends StatefulWidget {
   static const String routeName = '/digiceipts-details';
@@ -48,30 +48,35 @@ class _DigiceiptsDetailScreenState extends State<DigiceiptsDetailScreen> {
   }
 
   void saveDigiceipts(BuildContext ctx) async {
-    List<Map<String, String>> data = [];
+    List<Map<String, dynamic>> data = [];
 
-    if(_capturedImages.isNotEmpty) {
-      for (var element in _capturedImages) { 
+    if (_capturedImages.isNotEmpty) {
+      for (var element in _capturedImages) {
         final bytes = Io.File(element.path).readAsBytesSync();
 
         String img64 = base64Encode(bytes);
 
         data.add({
-          'receipt': 'data:image/jpg;base64,$img64',
-          'title': '',
+          'receipt': {
+            'image': 'data:image/jpg;base64,$img64',
+            'title': '',
+          },
+          'tags': [],
         });
       }
     }
 
-    if(data.isNotEmpty) {
+    if (data.isNotEmpty) {
       setState(() {
         isLoading = true;
       });
-      await Provider.of<DigiceiptsProvider>(ctx, listen: false).uploadDigiceipts(data).then((_) {
+      await Provider.of<DigiceiptsProvider>(ctx, listen: false)
+          .uploadDigiceipts(data)
+          .then((_) {
         setState(() {
-          // isLoading = false;
+          isLoading = false;
 
-          // Navigator.pushReplacementNamed(context, HomeTabs.routeName);
+          Navigator.pushReplacementNamed(context, HomeTabs.routeName);
         });
       });
     }
@@ -120,49 +125,55 @@ class _DigiceiptsDetailScreenState extends State<DigiceiptsDetailScreen> {
             height: 50,
             child: TextButton(
               onPressed: () => saveDigiceipts(context),
-              child:  isLoading ? const CircularProgressIndicator() :  const Text("Save"),
+              child: isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text("Save"),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: _capturedImages.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : GridView.count(
-                primary: false,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-                children: _capturedImages
-                    .map((image) => Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.file(
-                                image,
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 22,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              right: 1,
-                              child: GestureDetector(
-                                onTap: () => deleteCameraReceipt(image),
-                                child: SvgPicture.asset(
-                                  closeCameraIcon,
-                                  width: 25,
-                                  height: 25,
-                                  semanticsLabel: 'Close camera',
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: _capturedImages.isEmpty
+              ? Center(
+                  child: Text('You dont have any captured digiceipt now', style: Theme.of(context).textTheme.headline3,))
+              : GridView.count(
+                  primary: false,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                  children: _capturedImages
+                      .map((image) => Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.file(
+                                  image,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2 - 22,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            ),
-                          ],
-                        ))
-                    .toList(),
-              ),
+                              Positioned(
+                                top: 0,
+                                right: 1,
+                                child: GestureDetector(
+                                  onTap: () => deleteCameraReceipt(image),
+                                  child: SvgPicture.asset(
+                                    closeCameraIcon,
+                                    width: 25,
+                                    height: 25,
+                                    semanticsLabel: 'Close camera',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ))
+                      .toList(),
+                ),
+        ),
       ),
     );
   }
