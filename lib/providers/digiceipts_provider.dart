@@ -20,6 +20,7 @@ class DigiceiptsProvider with ChangeNotifier {
   }
 
   Future<void> getDigiceipts() async {
+    
     try {
       final url = Uri.parse('$baseURL/receipts?view=gallery&page=1&limit=15');
 
